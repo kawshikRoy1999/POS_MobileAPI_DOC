@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS API Mobile Developer Flow Diagrams - Corrected</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <script src="https://mermaid.js.org/mermaid.min.js"></script>
+    
+    <style>
+        /* CSS Variables for easy color theme management */
+        :root {
+            --primary-color: #3f51b5; /* Indigo */
+            --secondary-color: #00bcd4; /* Cyan/Teal */
+            --background-gradient-start: #3f51b5;
+            --background-gradient-end: #03a9f4; /* Light Blue */
+            --light-bg: #f5f8fa;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif; /* Modern, clean font */
+            background: var(--light-bg);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* HEADER STYLING */
+        .header {
+            background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
+            color: white;
+            padding: 60px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* CONTENT & FLOW SECTION STYLING */
+        .content {
+            padding: 40px;
+        }
+        
+        .flow-section {
+            margin-bottom: 60px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 40px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .flow-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 4px solid var(--secondary-color);
+            padding-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .flow-section h3 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        /* DIAGRAM STYLING */
+        .diagram-container {
+            background: #f0f4ff;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mermaid div should be centered */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+        
+        /* API STEP STYLING */
+        .api-details {
+            background: #e3f2fd;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+        
+        .api-details strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .step {
+            margin: 25px 0;
+            padding: 20px;
+            background: #ffffff;
+            border-left: 5px solid var(--secondary-color);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .step-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.2em;
+        }
+        
+        /* CODE BLOCK STYLING (Dark Theme) */
+        .json-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        
+        /* JSON Syntax Highlighting */
+        .json-key { color: #9cdcfe; } /* Light Blue */
+        .json-string { color: #ce9178; } /* Orange */
+        .json-number { color: #b5cea8; } /* Light Green */
+        .json-boolean { color: #569cd6; } /* Royal Blue */
+        .json-comment { color: #6a9955; } /* Green comment */
+        .json-function { color: #dcdcaa; } /* Yellow function names */
+        .json-method { color: #4ec9b0; } /* Teal methods */
+        
+        /* TAB NAVIGATION STYLING */
+        .tab-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            padding: 12px 25px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .tab-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* API REFERENCE TABLE STYLING */
+        .api-reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .api-reference-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: none;
+        }
+        
+        .api-reference-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        
+        .api-reference-table tr:nth-child(even) {
+            background: #fcfcfc;
+        }
+        
+        .api-reference-table tr:hover {
+            background: #f0f4ff;
+        }
+        
+        .endpoint {
+            background: #e8eaf6;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .method {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: white;
+            min-width: 60px;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .method.post { background: #4caf50; } /* Green */
+        .method.get { background: #2196f3; }  /* Blue */
+        .method.put { background: #ff9800; } /* Orange */
+        
+        /* FOOTER STYLING */
+        .footer {
+            background: #263238; /* Darker footer */
+            color: #cfd8dc;
+            padding: 30px 40px;
+            text-align: center;
+            font-size: 0.9em;
+            border-radius: 0 0 16px 16px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 1024px) {
+            body {
+                padding: 20px 10px;
+            }
+            .header h1 {
+                font-size: 2.2em;
+            }
+            .content {
+                padding: 30px;
+            }
+            .flow-section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 15px 30px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .flow-section {
+                padding: 20px;
+            }
+            .tab-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .tab-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ POS API Mobile Developer Guide</h1>
+            <p>Complete Flow Diagrams & API Integration Guide</p>
+        </div>
+        
+        <div class="content">
+            
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab(event, 'flow1')">📋 Flow 1: Setup</button>
+                <button class="tab-button" onclick="showTab(event, 'flow2')">👤 Flow 2: Login</button>
+                <button class="tab-button" onclick="showTab(event, 'flow3')">🌐 Flow 3: Online</button>
+                <button class="tab-button" onclick="showTab(event, 'flow4')">📴 Flow 4: Offline</button>
+                <button class="tab-button" onclick="showTab(event, 'flow5')">🔄 Flow 5: Sync</button>
+                <button class="tab-button" onclick="showTab(event, 'flow6')">💳 Flow 6: Split Pay</button>
+                <button class="tab-button" onclick="showTab(event, 'reference')">📚 API Reference</button>
+            </div>
+            
+            <div id="flow1" class="tab-content active">
+                <div class="flow-section">
+                    <h2>🔧 Flow 1: Initial Setup (Owner & Restaurant)</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>First user signs up (becomes owner), creates restaurant, configures menu with items/prices, adds employees.</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["👤 User Opens App<br/>First Time"] --> B["📝 STEP 1: Signup<br/>POST /auth/signup<br/>Create first user as Owner"]
+    B --> C["🔑 Get JWT Token"]
+    C --> D["🏪 STEP 2: Create Restaurant<br/>POST /restaurant<br/>Configure POS Settings"]
+    D --> E["🆔 Get restaurantId"]
+    E --> F["🍲 STEP 3: Configure Menu<br/>POST /menu<br/>Add items & prices"]
+    F --> G["👥 STEP 4: Add Employees<br/>POST /employee<br/>Multiple calls"]
+    G --> H["✅ Setup Complete"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step API Calls</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>User Signup</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/auth/signup
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"username"</span>: <span class="json-string">"owner_user"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"owner@example.com"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"SecurePass123!"</span>,
+  <span class="json-key">"fullName"</span>: <span class="json-string">"Restaurant Owner"</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> JWT token + user (role: Owner)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Create Restaurant</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/restaurant
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"name"</span>: <span class="json-string">"My Restaurant"</span>,
+  <span class="json-key">"address"</span>: <span class="json-string">"123 Main St"</span>,
+  <span class="json-key">"hasTableService"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"isKOTEnabled"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"isOfflineModeAllowed"</span>: <span class="json-boolean">true</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> restaurantId, configuration confirmed</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">3</span>Configure Menu</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/menu
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"restaurantId"</span>: <span class="json-number">1</span>,
+  <span class="json-key">"categories"</span>: <span class="json-key">[</span>
+    <span class="json-key">{</span>
+      <span class="json-key">"name"</span>: <span class="json-string">"Beverages"</span>,
+      <span class="json-key">"items"</span>: <span class="json-key">[</span>
+        <span class="json-key">{ "name"</span>: <span class="json-string">"Tea"</span>, <span class="json-key">"price"</span>: <span class="json-number">2.50</span>, <span class="json-key">"tax"</span>: <span class="json-number">0.18</span> <span class="json-key">}</span>,
+        <span class="json-key">{ "name"</span>: <span class="json-string">"Coffee"</span>, <span class="json-key">"price"</span>: <span class="json-number">3.00</span>, <span class="json-key">"tax"</span>: <span class="json-number">0.18</span> <span class="json-key">}</span>
+      <span class="json-key">]</span>
+    <span class="json-key">}</span>
+  <span class="json-key">]</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Note:</strong> Menu items, prices, and taxes configured by admin before employees use POS</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">4</span>Add Employees</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/employee (repeat for each)
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"username"</span>: <span class="json-string">"employee1"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"emp@restaurant.com"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"EmpPass123!"</span>,
+  <span class="json-key">"fullName"</span>: <span class="json-string">"John Doe"</span>,
+  <span class="json-key">"restaurantId"</span>: <span class="json-number">1</span>,
+  <span class="json-key">"role"</span>: <span class="json-string">"Employee"</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> Employee created with assigned employeeId</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="flow2" class="tab-content">
+                <div class="flow-section">
+                    <h2>👤 Flow 2: Employee Login & Dashboard</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>Employee starts app, logs in, fetches tables and menu.</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["📱 Employee Opens App"] --> B["🔐 STEP 1: Login<br/>POST /auth/login<br/>Authenticate"]
+    B --> C["🔑 Get JWT Token<br/>+ restaurantId"]
+    C --> D{Is Table<br/>Service?}
+    D -->|YES| E["📋 STEP 2: Get Tables<br/>GET /table/restaurant/1"]
+    D -->|NO| F["⏭️ Skip Tables"]
+    E --> G["🍽️ Display Table List"]
+    F --> G
+    G --> H["🍲 STEP 3: Get Menu<br/>GET /menu/restaurant/1"]
+    H --> I["📺 Display Menu UI<br/>Ready for Orders"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step API Calls</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>Employee Login</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/auth/login
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"username"</span>: <span class="json-string">"employee1"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"EmpPass123!"</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> JWT token + restaurant config</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Get Tables (if enabled)</div>
+                        <div class="api-details">
+                            <strong>GET</strong> /api/table/restaurant/{restaurantId}
+                        </div>
+                        <p><strong>Response:</strong> Array of table objects with status</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">3</span>Get Menu</div>
+                        <div class="api-details">
+                            <strong>GET</strong> /api/menu/restaurant/{restaurantId}
+                        </div>
+                        <p><strong>Response:</strong> Menu categories + items + prices</p>
+                        <p><strong>Action:</strong> Cache menu locally, display in UI</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="flow3" class="tab-content">
+                <div class="flow-section">
+                    <h2>🌐 Flow 3: Online Mode (Complete Order to Payment)</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>Internet available. Employee creates order → KOT → Bill → Payment in real-time.</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["🍽️ Select Table<br/>or Counter"] --> B["🛒 STEP 1: Create Order<br/>POST /order?isOnline=true<br/>Select items, qty, notes"]
+    B --> C["✅ Order Created<br/>get orderId, orderNumber"]
+    C --> D{KOT<br/>Enabled?}
+    D -->|YES| E["🔔 STEP 2: KOT Auto-Generated<br/>Server creates KOT<br/>Send to Kitchen"]
+    D -->|NO| F["⏭️ Skip KOT"]
+    E --> F
+    F --> G["📄 STEP 3: Create Bill<br/>POST /bill?isOnline=true<br/>Calculate total with tax"]
+    G --> H["💰 Bill Ready"]
+    H --> I["💳 STEP 4: Create Payment<br/>POST /payment?isOnline=true<br/>Cash / Card / Split"]
+    I --> J["✓ Payment Confirmed<br/>Print Receipt"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step API Calls</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>Create Order (Online)</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/order?<span style="color: #ce9178;">isOnline=true</span>
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"restaurantId"</span>: <span class="json-number">1</span>,
+  <span class="json-key">"tableId"</span>: <span class="json-number">5</span>,
+  <span class="json-key">"type"</span>: <span class="json-number">0</span>,
+  <span class="json-key">"customerName"</span>: <span class="json-string">"John Smith"</span>,
+  <span class="json-key">"items"</span>: <span class="json-key">[</span>
+    <span class="json-key">{ "menuItemId"</span>: <span class="json-number">101</span>, <span class="json-key">"quantity"</span>: <span class="json-number">2</span>, <span class="json-key">"unitPrice"</span>: <span class="json-number">2.50</span>, <span class="json-key">"notes"</span>: <span class="json-string">"No sugar"</span> <span class="json-key">}</span>,
+    <span class="json-key">{ "menuItemId"</span>: <span class="json-number">104</span>, <span class="json-key">"quantity"</span>: <span class="json-number">1</span>, <span class="json-key">"unitPrice"</span>: <span class="json-number">5.00</span> <span class="json-key">}</span>
+  <span class="json-key">]</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> orderId=1001, orderNumber="ORD-20251205-1001", isSynced=true</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Create Bill (Online)</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/bill?<span style="color: #ce9178;">isOnline=true</span>
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"orderId"</span>: <span class="json-number">1001</span>,
+  <span class="json-key">"discount"</span>: <span class="json-number">0.0</span>,
+  <span class="json-key">"taxOverride"</span>: <span class="json-boolean">null</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> billId=2001, total=11.80 (subtotal + tax)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">3</span>Create Payment (Online)</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/payment?<span style="color: #ce9178;">isOnline=true</span>
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"billId"</span>: <span class="json-number">2001</span>,
+  <span class="json-key">"amount"</span>: <span class="json-number">11.80</span>,
+  <span class="json-key">"method"</span>: <span class="json-string">"Cash"</span>,
+  <span class="json-key">"reference"</span>: <span class="json-string">"cash-payment"</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response:</strong> paymentId=3001, status=Completed</p>
+                        <p><strong>Action:</strong> Mark bill paid, print receipt, mark table available</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="flow4" class="tab-content">
+                <div class="flow-section">
+                    <h2>📴 Flow 4: Offline Mode (NO API CALLS — Local Operations Only)</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>Internet NOT available. **NO API endpoints are called.** All data stored locally (SQLite/Realm) with IsSynced=false.</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["❌ No Internet Detected<br/>isOnline=false<br/>(NO API CALLS)"] --> B["🛒 STEP 1: Create Order<br/>LOCAL DATABASE ONLY<br/>Assign clientTempId"]
+    B --> C["📱 clientTempId generated<br/>clientVersion = now()<br/>IsSynced=false"]
+    C --> D["🍲 STEP 2: Create KOT<br/>LOCAL DATABASE ONLY<br/>Show on kitchen display"]
+    D --> E["📝 STEP 3: Create Bill<br/>LOCAL DATABASE ONLY<br/>Calculate total with tax"]
+    E --> F["💳 STEP 4: Create Payment<br/>LOCAL DATABASE ONLY<br/>Record payment locally"]
+    F --> G["📋 All Data Queued Locally<br/>clientTempId assigned to each<br/>Print local receipt"]
+    G --> H["⏳ Await Internet Restoration<br/>Do NOT sync until online<br/>Continue POS operations"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step Operations (LOCAL ONLY)</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>Create Order (Local Only — NO API)</div>
+                        <div class="api-details">
+                            <strong>NO API CALL</strong> — Save directly to SQLite/Realm database
+                        </div>
+                        <div class="json-block">
+<span class="json-comment">// Client generates locally</span>
+<span class="json-key">const order = {</span>
+  <span class="json-key">clientTempId</span>: <span class="json-string">"c-ord-abc123-1"</span>,  <span class="json-comment">// GUID generated by client</span>
+  <span class="json-key">clientVersion</span>: <span class="json-string">DateTime.UtcNow.Ticks</span>,
+  <span class="json-key">restaurantId</span>: <span class="json-number">1</span>,
+  <span class="json-key">tableId</span>: <span class="json-number">5</span>,
+  <span class="json-key">"customerName"</span>: <span class="json-string">"Alice"</span>,
+  <span class="json-key">"items"</span>: <span class="json-key">[</span>
+    <span class="json-key">{ clientTempItemId</span>: <span class="json-string">"ci-1"</span>, <span class="json-key">menuItemId</span>: <span class="json-number">101</span>, <span class="json-key">quantity</span>: <span class="json-number">2</span>, <span class="json-key">unitPrice</span>: <span class="json-number">2.50</span> <span class="json-key">}</span>
+  <span class="json-key">]</span>,
+  <span class="json-key">isSynced</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">createdAt</span>: <span class="json-string">DateTime.UtcNow</span>
+<span class="json-key">}</span>
+<span class="json-function">await</span> localDb.<span class="json-method">InsertOrder</span>(order);
+                        </div>
+                        <p><strong>Client Action:</strong> Generate clientTempId locally, store order in local database, display in POS UI</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Create KOT (Local Only — NO API)</div>
+                        <div class="api-details">
+                            <strong>NO API CALL</strong> — Create KOT locally and display on kitchen terminal
+                        </div>
+                        <div class="json-block">
+<span class="json-key">const kot = {</span>
+  <span class="json-key">clientTempId</span>: <span class="json-string">"c-kot-xyz-1"</span>,
+  <span class="json-key">clientVersion</span>: <span class="json-string">DateTime.UtcNow.Ticks</span>,
+  <span class="json-key">clientOrderTempId</span>: <span class="json-string">"c-ord-abc123-1"</span>,
+  <span class="json-key">items</span>: <span class="json-key">[ { clientTempItemId</span>: <span class="json-string">"ci-1"</span>, <span class="json-key">menuItemId</span>: <span class="json-number">101</span>, <span class="json-key">qty</span>: <span class="json-number">2</span> <span class="json-key">} ]</span>,
+  <span class="json-key">isSynced</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">createdAt</span>: <span class="json-string">DateTime.UtcNow</span>
+<span class="json-key">}</span>
+<span class="json-function">await</span> localDb.<span class="json-method">InsertKOT</span>(kot);
+kitchenDisplay.<span class="json-method">Show</span>(kot);  <span class="json-comment">// Local display only</span>
+                        </div>
+                        <p><strong>Client Action:</strong> Store in local DB, show on kitchen display terminal (local only)</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">3</span>Create Bill (Local Only — NO API)</div>
+                        <div class="api-details">
+                            <strong>NO API CALL</strong> — Calculate and store bill locally
+                        </div>
+                        <div class="json-block">
+<span class="json-comment">// Calculate locally</span>
+<span class="json-key">const subtotal = 5.00;</span>
+<span class="json-key">const tax = 0.18;</span>
+<span class="json-key">const bill = {</span>
+  <span class="json-key">clientTempId</span>: <span class="json-string">"c-bill-xyz-1"</span>,
+  <span class="json-key">clientVersion</span>: <span class="json-string">DateTime.UtcNow.Ticks</span>,
+  <span class="json-key">clientOrderTempId</span>: <span class="json-string">"c-ord-abc123-1"</span>,
+  <span class="json-key">subtotal</span>: <span class="json-number">5.00</span>,
+  <span class="json-key">tax</span>: <span class="json-number">0.90</span>,
+  <span class="json-key">total</span>: <span class="json-number">5.90</span>,
+  <span class="json-key">isSynced</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">createdAt</span>: <span class="json-string">DateTime.UtcNow</span>
+<span class="json-key">}</span>
+<span class="json-function">await</span> localDb.<span class="json-method">InsertBill</span>(bill);
+                        </div>
+                        <p><strong>Client Action:</strong> Calculate totals locally, store in local database</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">4</span>Create Payment (Local Only — NO API)</div>
+                        <div class="api-details">
+                            <strong>NO API CALL</strong> — Record payment locally
+                        </div>
+                        <div class="json-block">
+<span class="json-key">const payment = {</span>
+  <span class="json-key">clientTempId</span>: <span class="json-string">"c-pay-abc-1"</span>,
+  <span class="json-key">clientVersion</span>: <span class="json-string">DateTime.UtcNow.Ticks</span>,
+  <span class="json-key">clientBillTempId</span>: <span class="json-string">"c-bill-xyz-1"</span>,
+  <span class="json-key">amount</span>: <span class="json-number">5.90</span>,
+  <span class="json-key">method</span>: <span class="json-string">"Cash"</span>,
+  <span class="json-key">status</span>: <span class="json-string">"Completed"</span>,
+  <span class="json-key">isSynced</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">createdAt</span>: <span class="json-string">DateTime.UtcNow</span>
+<span class="json-key">}</span>
+<span class="json-function">await</span> localDb.<span class="json-method">InsertPayment</span>(payment);
+printer.<span class="json-method">PrintReceipt</span>(order, bill, payment);  <span class="json-comment">// Print locally</span>
+                        </div>
+                        <p><strong>Client Action:</strong> Store payment in local DB, print receipt locally. DO NOT call any server endpoint.</p>
+                    </div>
+
+                    <h3>✅ What App Can Do When Offline</h3>
+                    <ul>
+                        <li>✅ Create orders and store in local database</li>
+                        <li>✅ Create KOTs and display on kitchen terminal</li>
+                        <li>✅ Create bills and calculate totals locally</li>
+                        <li>✅ Record payments (cash/card/split) locally</li>
+                        <li>✅ Print receipts locally</li>
+                        <li>✅ Display POS UI and take orders</li>
+                        <li>✅ Queue all entities for sync (clientTempId assigned to each)</li>
+                    </ul>
+
+                    <h3>❌ What App CANNOT Do When Offline</h3>
+                    <ul>
+                        <li>❌ Call ANY API endpoints (POST, GET, PUT, DELETE)</li>
+                        <li>❌ Sync to server (no internet)</li>
+                        <li>❌ Validate menu items against server (uses cached menu)</li>
+                        <li>❌ Assign server-side IDs (orderNumber, billNumber, etc.) — waits for sync</li>
+                        <li>❌ Contact payment gateways or validate payments</li>
+                        <li>❌ Contact remote kitchen displays</li>
+                        <li>❌ Fetch employee/table data from server</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="flow5" class="tab-content">
+                <div class="flow-section">
+                    <h2>🔄 Flow 5: Offline to Online Sync</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>Internet restored. App syncs all queued items to server.</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["🌐 Internet Restored<br/>App Detects Connectivity"] --> B["📋 STEP 1: Get Pending<br/>GET /sync/pending/1<br/>Check queue count"]
+    B --> C["📊 X items pending"]
+    C --> D["🔄 STEP 2: Sync All Pending<br/>POST /sync/sync/1<br/>Send all queued items"]
+    D --> E{Response<br/>Status}
+    E -->|Completed| F["✅ Success<br/>Update mappings<br/>clientTempId → serverId"]
+    E -->|Conflict| G["⚠️ Conflict<br/>Show user options<br/>Accept / Retry"]
+    E -->|Retry| H["⏳ Retrying<br/>Exponential backoff<br/>Auto-retry"]
+    F --> I["📱 Mark All as IsSynced=true<br/>Sync Complete"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step API Calls</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>Get Pending Items (Optional)</div>
+                        <div class="api-details">
+                            <strong>GET</strong> /api/sync/pending/{restaurantId}
+                        </div>
+                        <p><strong>Response:</strong> Count of pending orders, bills, payments</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Sync All Pending Items</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/sync/sync/{restaurantId}
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"items"</span>: <span class="json-key">[</span>
+    <span class="json-key">{</span>
+      <span class="json-key">"entityType"</span>: <span class="json-string">"Order"</span>,
+      <span class="json-key">"clientTempId"</span>: <span class="json-string">"c-ord-abc123-1"</span>,
+      <span class="json-key">"payload"</span>: <span class="json-key">{ /* full order */ }</span>,
+      <span class="json-key">"clientVersion"</span>: <span class="json-number">637000000000100000</span>,
+      <span class="json-key">"conflictStrategy"</span>: <span class="json-string">"ClientWins"</span>
+    <span class="json-key">}</span>,
+    <span class="json-key">{</span>
+      <span class="json-key">"entityType"</span>: <span class="json-string">"Bill"</span>,
+      <span class="json-key">"clientTempId"</span>: <span class="json-string">"c-bill-xyz-1"</span>,
+      <span class="json-key">"payload"</span>: <span class="json-key">{ /* full bill */ }</span>,
+      <span class="json-key">"clientVersion"</span>: <span class="json-number">637000000000100100</span>
+    <span class="json-key">}</span>,
+    <span class="json-key">{</span>
+      <span class="json-key">"entityType"</span>: <span class="json-string">"Payment"</span>,
+      <span class="json-key">"clientTempId"</span>: <span class="json-string">"c-pay-abc-1"</span>,
+      <span class="json-key">"payload"</span>: <span class="json-key">{ /* full payment */ }</span>,
+      <span class="json-key">"clientVersion"</span>: <span class="json-number">637000000000100200</span>
+    <span class="json-key">}</span>
+  <span class="json-key">]</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Response (Success):</strong></p>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"results"</span>: <span class="json-key">[</span>
+    <span class="json-key">{ "clientTempId"</span>: <span class="json-string">"c-ord-abc123-1"</span>, <span class="json-key">"status"</span>: <span class="json-string">"Completed"</span>, <span class="json-key">"serverId"</span>: <span class="json-number">1001</span>, <span class="json-key">"serverNumber"</span>: <span class="json-string">"ORD-20251205-1001"</span> <span class="json-key">}</span>,
+    <span class="json-key">{ "clientTempId"</span>: <span class="json-string">"c-bill-xyz-1"</span>, <span class="json-key">"status"</span>: <span class="json-string">"Completed"</span>, <span class="json-key">"serverId"</span>: <span class="json-number">2001</span> <span class="json-key">}</span>,
+    <span class="json-key">{ "clientTempId"</span>: <span class="json-string">"c-pay-abc-1"</span>, <span class="json-key">"status"</span>: <span class="json-string">"Completed"</span>, <span class="json-key">"serverId"</span>: <span class="json-number">3001</span> <span class="json-key">}</span>
+  <span class="json-key">]</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Client Action:</strong> Update mappings, mark all as IsSynced=true</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="flow6" class="tab-content">
+                <div class="flow-section">
+                    <h2>💳 Flow 6: Split Payments</h2>
+                    
+                    <h3>When This Happens</h3>
+                    <p>Customer pays with multiple methods (cash + card, for example).</p>
+                    
+                    <h3>Flow Diagram (Mermaid)</h3>
+                    <div class="diagram-container">
+                        <div class="mermaid">
+graph TD
+    A["📄 Bill Total: $11.80"] --> B["💳 Payment Methods<br/>• Cash: $5.00<br/>• Card: $6.80"]
+    B --> C["💵 STEP 1: Create Payment<br/>POST /payment?isOnline=true<br/>billId, amount=5.00, method=Cash"]
+    C --> D["✅ Payment 1: $5.00"]
+    D --> E["💳 STEP 2: Create Payment<br/>POST /payment?isOnline=true<br/>billId, amount=6.80, method=Card"]
+    E --> F["✅ Payment 2: $6.80"]
+    F --> G["✓ Bill Fully Paid<br/>Total received: $11.80"]
+                        </div>
+                    </div>
+                    
+                    <h3>Step-by-Step API Calls</h3>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">1</span>Payment 1: Cash</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/payment?<span style="color: #ce9178;">isOnline=true</span>
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"billId"</span>: <span class="json-number">2001</span>,
+  <span class="json-key">"amount"</span>: <span class="json-number">5.00</span>,
+  <span class="json-key">"method"</span>: <span class="json-string">"Cash"</span>,
+  <span class="json-key">"reference"</span>: <span class="json-string">"Payment 1 of 2"</span>
+<span class="json-key">}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-title"><span class="step-number">2</span>Payment 2: Card</div>
+                        <div class="api-details">
+                            <strong>POST</strong> /api/payment?<span style="color: #ce9178;">isOnline=true</span>
+                        </div>
+                        <div class="json-block">
+<span class="json-key">{</span>
+  <span class="json-key">"billId"</span>: <span class="json-number">2001</span>,
+  <span class="json-key">"amount"</span>: <span class="json-number">6.80</span>,
+  <span class="json-key">"method"</span>: <span class="json-string">"Card"</span>,
+  <span class="json-key">"reference"</span>: <span class="json-string">"txn-card-12345"</span>
+<span class="json-key">}</span>
+                        </div>
+                        <p><strong>Client Action:</strong> After both payments, bill is fully paid</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="reference" class="tab-content">
+                <div class="flow-section">
+                    <h2>📚 Quick API Reference</h2>
+                    
+                    <h3>All Endpoints at a Glance</h3>
+                    
+                    <table class="api-reference-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Method</th>
+                                <th>Endpoint</th>
+                                <th>When to Call</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Signup</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/auth/signup</span></td>
+                                <td>First user registration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Login</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/auth/login</span></td>
+                                <td>App startup</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Create Restaurant</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/restaurant</span></td>
+                                <td>Owner setup</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Add Employee</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/employee</span></td>
+                                <td>Owner adds staff</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get Tables</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/table/restaurant/{id}</span></td>
+                                <td>On login / refresh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get Menu</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/menu/restaurant/{id}</span></td>
+                                <td>On login / refresh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Create Order</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/order?isOnline=true/false</span></td>
+                                <td>When taking order</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get Order</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/order/{id}</span></td>
+                                <td>Check status</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Update Order</strong></td>
+                                <td><span class="method put">PUT</span></td>
+                                <td><span class="endpoint">/order/{id}</span></td>
+                                <td>Add/remove items</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get KOT</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/kot/order/{orderId}</span></td>
+                                <td>Check kitchen status</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Create Bill</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/bill?isOnline=true/false</span></td>
+                                <td>Before payment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get Bill</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/bill/{id}</span></td>
+                                <td>View bill details</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Create Payment</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/payment?isOnline=true/false</span></td>
+                                <td>Capture payment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Get Pending</strong></td>
+                                <td><span class="method get">GET</span></td>
+                                <td><span class="endpoint">/sync/pending/{restaurantId}</span></td>
+                                <td>Before sync</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sync Items</strong></td>
+                                <td><span class="method post">POST</span></td>
+                                <td><span class="endpoint">/sync/sync/{restaurantId}</span></td>
+                                <td>Internet restored</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3>Header Requirements</h3>
+                    <div class="api-details">
+All requests (except /auth/signup and /auth/login):
+<br/><strong>Authorization:</strong> Bearer {JWT_TOKEN}
+<br/><strong>Content-Type:</strong> application/json
+                    </div>
+                    
+                    <h3>Important Query Parameters</h3>
+                    <div class="api-details">
+<strong>isOnline:</strong> Add to /order, /bill, /payment endpoints
+<br/>• true = save to server immediately, IsSynced=true
+<br/>• false = save locally, queue for sync, IsSynced=false
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p><strong>Last Updated:</strong> December 5, 2025</p>
+            <p>For questions, refer to <code>For_mobileDeveloper.md</code> or <code>SYNC_README.md</code></p>
+        </div>
+    </div>
+    
+    <script>
+        // Use event argument to handle button activation correctly
+        function showTab(event, tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate corresponding button using the event target
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Initialize Mermaid
+        // This ensures the diagrams are rendered when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.mermaid) {
+                mermaid.initialize({ startOnLoad: true, theme: 'default' });
+                // Force a content refresh to ensure all tab content is processed
+                // even if initially hidden
+                mermaid.contentLoaded(); 
+            }
+            // Ensure Flow 1 is active on load
+            document.getElementById('flow1').classList.add('active');
+            document.querySelector('.tab-button').classList.add('active');
+        });
+    </script>
+</body>
+</html>
